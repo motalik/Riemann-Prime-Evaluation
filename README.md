@@ -14,10 +14,10 @@ make
 
 cd ..
 
-Usage
+# Usage
 
-# calcola zeri
+- calcola zeri
 ./TrovaZeri
 
-# trova numero primi
+- trova numero primi
 ./TrovaPrimi
