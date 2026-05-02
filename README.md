@@ -17,7 +17,9 @@ cd ..
 # Usage
 
 - calcola zeri
+  
 ./TrovaZeri
 
 - trova numero primi
+  
 ./TrovaPrimi
