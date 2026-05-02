@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include <omp.h> // Header per il calcolo parallelo
+#include <omp.h>
 #include <boost/multiprecision/mpfr.hpp>
 #include <boost/math/constants/constants.hpp>
 #include "../include/prime_logic.hpp"
