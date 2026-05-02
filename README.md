@@ -1,10 +1,10 @@
-Prerequisites
+# Prerequisites
 * C++17 Compiler (GCC/Clang)
 * CMake >= 3.10
 * Boost Libraries (Multiprecision)
 * MPFR & GMP
 
-Build Instructions
+# Build Instructions
 
 mkdir build && cd build
 
