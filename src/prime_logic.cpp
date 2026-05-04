@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include <omp.h> // Header per il calcolo parallelo
+#include <omp.h>
 #include <boost/multiprecision/mpfr.hpp>
 #include <boost/math/constants/constants.hpp>
 #include "../include/prime_logic.hpp"
@@ -70,10 +70,10 @@ Real contributo(Real t, const std::vector<Real>& zeri) {
     Real L = log(t);
     Real A = L * 0.5;
     Real somma_totale = 0.0;
-    int n_zeri = static_cast<int>(zeri.size());
+    size_t n_zeri = zeri.size();
 
     #pragma omp parallel for reduction(+:somma_totale)
-    for (int i = 0; i < n_zeri; ++i) {
+    for (size_t i = 0; i < n_zeri; ++i) {
         Real gamma = zeri[i];
         Real B = gamma * L;
         Real M = sqrt(A * A + B * B);
@@ -116,13 +116,19 @@ int mu(int n){
 Real trova_primi(Real x, const std::vector<Real>& zeri){
     if (x < 2) return 0;
     Real res = 0;
-    int n_max = floor(log2(static_cast<double>(x.convert_to<double>())));
+
+
+    int n_max = (int)floor(log(x) / log(Real(2)));
+
     for (int n = 1; n <= n_max; ++n){
         int m = mu(n);
         if (m == 0) continue;
-        Real rad_n = pow(x, 1.0 / n);
+
+
+        Real rad_n = pow(x, Real(1.0) / n);
         Real j = calcola_Jx(rad_n, zeri);
         res += (Real(m) / Real(n)) * j;
     }
-    return round(res);
+
+    return floor(res + 0.5);
 }

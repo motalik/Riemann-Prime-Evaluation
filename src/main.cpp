@@ -2,44 +2,45 @@
 #include <iomanip>
 #include <fstream>
 #include "zeta_logic.hpp"
-
 using namespace std;
 int main() {
-
-    cout << std::fixed << std::setprecision(512);
-    ofstream outdata;
-    int zeri_da_trovare;
-    cout << "Inserisci zeri da trovare: " << endl;
-    cin >> zeri_da_trovare;
-    int trovati = 0;
-    long long n_gram = -1;
+    cout << std::fixed << std::setprecision(150);
     std::ofstream fileZeri("data/zeri.dat");
-    fileZeri << std::fixed << std::setprecision(512);
-    if (!outdata){
-	    cerr << "Errore apertura file" << endl;
-	    exit(1);
+    fileZeri << std::fixed << std::setprecision(150);
+
+    int zeri_da_trovare;
+    cout << "Quanti zeri vuoi trovare? ";
+    cin >> zeri_da_trovare;
+
+    int trovati = 0;
+    Real t = 13.0;
+    Real passo = 0.1;
+
+    Real z_precedente = funzione_Z(t);
+
+    cout << "Inizio ricerca..." << endl;
+
+    while (trovati < zeri_da_trovare) {
+        t += passo;
+        Real z_attuale = funzione_Z(t);
+
+        if ((z_precedente < 0 && z_attuale > 0) || (z_precedente > 0 && z_attuale < 0)) {
+
+            Real zero = newton(t - passo / 2.0);
+
+            trovati++;
+            fileZeri << zero << endl;
+            cout << "Trovato zero n. " << trovati << " a t = " << zero << endl;
+
+            z_attuale = funzione_Z(t + 0.001);
+            t += 0.001;
+        }
+
+        z_precedente = z_attuale;
+
     }
 
-    while(calcola_punto_gram(++n_gram) < 13);
-    fileZeri << 14.134725141734693790457251983562470270784257115699243175685567460149 << endl;
-    while (trovati < zeri_da_trovare){
-	    Real g0 = calcola_punto_gram(n_gram);
-	    Real g1 = calcola_punto_gram(n_gram + 1);
-	    
-	    Real z0 = funzione_Z(g0);
-	    Real z1 = funzione_Z(g1);
-	    
-	    if ((z0 > 0 && z1 < 0) || (z0 < 0 && z1 > 0)){
-		    Real stima = (g0 + g1) / 2.0;
-		    Real zero = newton(stima);
-
-		    trovati++;
-		    fileZeri << zero << endl;
-		    cout << "Zero: " << trovati << ": " << zero << endl;
-	    }
-	    n_gram++;
-    }
-    outdata.close();
-    
+    fileZeri.close();
+    cout << "Ricerca completata." << endl;
     return 0;
 }

@@ -74,10 +74,23 @@ Real funzione_Z(Real t) {
     Real resto = calcola_resto(t, N, p);
     return somma + resto;
 }
+Real derivata(Real t) {
+    Real limite = sqrt(t / DUE_PI);
+    int N = floor(limite.convert_to<double>());
 
-Real derivata(Real t){
-    const Real h = Real("1e-120");
-    return (funzione_Z(t+h) - funzione_Z(t-h)) / (2 * h);
+    Real d_theta = 0.5 * log(t / DUE_PI);
+
+    Real theta = funzione_theta(t, N_TERM_SIEGEL);
+    Real somma_derivata = 0.0;
+
+    for (int n = 1; n <= N; n++) {
+        Real ln_n = log(Real(n));
+        Real argomento = theta - t * ln_n;
+
+        somma_derivata += (sin(argomento) * (d_theta - ln_n)) / sqrt(Real(n));
+    }
+
+    return -2.0 * somma_derivata;
 }
 
 Real newton(Real t0){
@@ -106,4 +119,34 @@ Real calcola_punto_gram(long long n){
         t = t - diff / d_th;
     }
     return t;
+}
+
+void trova_zeri(Real t_start, Real t_end, Real step) {
+    Real t = t_start;
+    Real z_vecchio = funzione_Z(t);
+
+    while (t < t_end) {
+        t += step;
+        Real z_nuovo = funzione_Z(t);
+
+        if (z_vecchio * z_nuovo < 0) {
+            Real zero_preciso = newton(t - step / 2.0);
+            std::cout << "Zero trovato a: " << std::setprecision(150) << zero_preciso << std::endl;
+        }
+
+        z_vecchio = z_nuovo;
+    }
+}
+
+Real derivata_Z(Real t) {
+    Real limite = sqrt(t / DUE_PI);
+    int N = floor(limite.convert_to<double>());
+    Real theta = funzione_theta(t, N_TERM_SIEGEL);
+    Real d_theta = 0.5 * log(t / DUE_PI);
+    Real s = 0.0;
+    for(int n = 1; n <= N; n++){
+        s += (log(Real(n)) * sin(theta - t * log(Real(n)))) / sqrt(Real(n));
+    }
+
+    return 2.0 * s;
 }
