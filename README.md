@@ -18,8 +18,8 @@ cd ..
 
 - calcola zeri
   
-./TrovaZeri
+./build/TrovaZeri
 
 - trova numero primi
   
-./TrovaPrimi
+./build/TrovaPrimi
